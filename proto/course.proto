@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package course;
+
+option go_package = "edu-course/proto";
+
+// CourseService 课程服务
+service CourseService {
+  rpc CreateCourse(CreateCourseRequest) returns (CreateCourseResponse);
+  rpc GetCourse(GetCourseRequest) returns (GetCourseResponse);
+  rpc GetAllCourses(GetAllCoursesRequest) returns (GetAllCoursesResponse);
+  rpc UpdateCourse(UpdateCourseRequest) returns (UpdateCourseResponse);
+  rpc DeleteCourse(DeleteCourseRequest) returns (DeleteCourseResponse);
+}
+
+// Course 课程模型
+message Course {
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  string description = 4;
+  double price = 5;
+  int32 type_id = 6;
+  string type_code = 7;
+  string created_by = 8;
+  string updated_by = 9;
+  int32 status = 10;
+  int64 created_at = 11;
+  int64 updated_at = 12;
+  int64 deleted_at = 13; // 0表示未删除，>0表示删除时间戳
+}
+
+// CreateCourseRequest 创建课程请求
+message CreateCourseRequest {
+  string title = 1;
+  string content = 2;
+  string description = 3;
+  double price = 4;
+  int32 type_id = 5;
+  string type_code = 6;
+  string created_by = 7;
+  string updated_by = 8;
+  int32 status = 9;
+}
+
+// CreateCourseResponse 创建课程响应
+message CreateCourseResponse {
+  Course course = 1;
+  string error = 2;
+}
+
+// GetCourseRequest 获取课程请求
+message GetCourseRequest {
+  int64 id = 1;
+}
+
+// GetCourseResponse 获取课程响应
+message GetCourseResponse {
+  Course course = 1;
+  string error = 2;
+}
+
+// GetAllCoursesRequest 获取所有课程请求
+message GetAllCoursesRequest {
+}
+
+// GetAllCoursesResponse 获取所有课程响应
+message GetAllCoursesResponse {
+  repeated Course courses = 1;
+  string error = 2;
+}
+
+// UpdateCourseRequest 更新课程请求
+message UpdateCourseRequest {
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  string description = 4;
+  double price = 5;
+  int32 type_id = 6;
+  string type_code = 7;
+  string updated_by = 8;
+  int32 status = 9;
+}
+
+// UpdateCourseResponse 更新课程响应
+message UpdateCourseResponse {
+  Course course = 1;
+  string error = 2;
+}
+
+// DeleteCourseRequest 删除课程请求
+message DeleteCourseRequest {
+  int64 id = 1;
+}
+
+// DeleteCourseResponse 删除课程响应
+message DeleteCourseResponse {
+  bool success = 1;
+  string error = 2;
+}
