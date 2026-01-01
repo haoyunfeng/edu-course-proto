@@ -8,7 +8,7 @@
 .
 ├── proto/
 │   └── course.proto      # 课程服务的 proto 定义
-├── pb/                   # 生成的 Go 代码（gitignore）
+├── course/               # 生成的 Go 代码
 │   ├── course.pb.go
 │   └── course_grpc.pb.go
 ├── go.mod                # Go 模块定义
@@ -67,7 +67,7 @@ make generate
 make generate-protoc
 ```
 
-两种方式都会从 proto 文件生成 Go 代码到 `pb` 目录。
+两种方式都会从 proto 文件生成 Go 代码到 `course` 目录。
 
 ### 代码检查
 
@@ -90,7 +90,7 @@ make clean
 1. 生成代码并打标签：
 ```bash
 make generate-protoc
-git add pb/ go.mod go.sum
+git add course/ go.mod go.sum
 git commit -m "feat: generate proto code"
 git tag -a v1.0.0 -m "Release v1.0.0"
 git push origin v1.0.0
@@ -103,7 +103,7 @@ go get github.com/haoyunfeng/edu-course-proto@v1.0.0
 
 在代码中导入：
 ```go
-import pb "github.com/haoyunfeng/edu-course-proto/pb"
+import course "github.com/haoyunfeng/edu-course-proto/course"
 ```
 
 #### 方式二：打包成 tar.gz

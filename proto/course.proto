@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package course;
 
-option go_package = "github.com/haoyunfeng/edu-course-proto/pb";
+option go_package = "github.com/haoyunfeng/edu-course-proto/course";
 
 // CourseService 课程服务
 service CourseService {

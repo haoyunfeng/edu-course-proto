@@ -4,7 +4,7 @@
 // - protoc             v4.25.3
 // source: proto/course.proto
 
-package pb
+package course
 
 import (
 	context "context"
