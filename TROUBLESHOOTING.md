@@ -95,7 +95,62 @@ export PATH="$PATH:$(go env GOPATH)/bin"
    make generate-protoc
    ```
 
-### 5. replacement directory ./pb_stub does not exist
+### 5. can't request version "v1.0.1" of the main module
+
+**问题原因**：
+- 在模块的根目录中尝试 `go get` 自己的模块（这是不允许的）
+- 或者尝试获取一个不存在的版本标签
+- 或者 `go.mod` 中有错误的 replace 指令指向自己
+
+**解决方案**：
+
+1. **不要在模块根目录中 go get 自己的模块**
+   ```bash
+   # 错误：在模块根目录中执行
+   cd /path/to/edu-course-proto
+   go get github.com/haoyunfeng/edu-course-proto@v1.0.1  # ❌ 错误
+   ```
+   
+   正确做法：在调用方的项目中执行 `go get`
+
+2. **检查 go.mod 中是否有错误的 replace 指令**
+   ```bash
+   grep "replace" go.mod
+   ```
+   
+   如果发现有指向自己的 replace 指令（这是示例代码），需要删除：
+   ```go
+   // 错误示例（应该删除）
+   replace github.com/haoyunfeng/edu-course-proto => /path/to/edu-course-proto
+   ```
+   
+   删除方法：
+   ```bash
+   go mod edit -dropreplace github.com/haoyunfeng/edu-course-proto
+   ```
+
+3. **如果要创建新版本，应该：**
+   ```bash
+   # 1. 生成代码
+   make generate-protoc
+   
+   # 2. 提交更改
+   git add pb/ go.mod go.sum
+   git commit -m "feat: update to v1.0.1"
+   
+   # 3. 创建新标签
+   git tag -a v1.0.1 -m "Release v1.0.1"
+   git push origin main
+   git push origin v1.0.1
+   ```
+
+4. **调用方使用新版本：**
+   ```bash
+   # 在调用方的项目中（不是模块根目录）
+   go get github.com/haoyunfeng/edu-course-proto@v1.0.1
+   ```
+
+### 6. replacement directory ./pb_stub does not exist
 
 **问题原因**：
 在调用方的 `go.mod` 文件中有一个错误的 replace 指令，指向了不存在的目录。
