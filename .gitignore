@@ -1,5 +1,6 @@
 # Generated files
 gen/
+pb/
 *.pb.go
 *.pb.gw.go
 

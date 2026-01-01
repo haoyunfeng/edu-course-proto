@@ -15,7 +15,7 @@
 make generate-protoc
 
 # 提交生成的代码（可选：如果希望将生成的代码也提交到仓库）
-git add gen/
+git add pb/ go.mod go.sum
 git commit -m "feat: generate proto code"
 ```
 
@@ -32,23 +32,23 @@ git push origin v1.0.0
 调用方可以通过以下方式引入：
 
 ```bash
-# 方式1：直接引入 gen/go 目录（如果仓库中有生成的代码）
-go get github.com/haoyunfeng/edu-course-proto/gen/go@v1.0.0
+# 直接引入模块
+go get github.com/haoyunfeng/edu-course-proto@v1.0.0
 
 # 方式2：使用 replace 指令（开发阶段）
 # 在调用方的 go.mod 中添加：
-replace edu-course/proto => ../edu-course-proto/gen/go
+replace github.com/haoyunfeng/edu-course-proto => ../edu-course-proto
 ```
 
 在代码中使用：
 ```go
 import (
-    "github.com/haoyunfeng/edu-course-proto/gen/go/proto"
+    "github.com/haoyunfeng/edu-course-proto/pb"
     "google.golang.org/grpc"
 )
 
 // 使用生成的代码
-client := proto.NewCourseServiceClient(conn)
+client := pb.NewCourseServiceClient(conn)
 ```
 
 ### 方式二：打包成 tar.gz
@@ -82,7 +82,7 @@ cd edu-course-proto-1.0.0
 
 # 在调用方的项目中，使用 replace 指令
 # 在 go.mod 中添加：
-replace edu-course/proto => /path/to/edu-course-proto-1.0.0
+replace github.com/haoyunfeng/edu-course-proto => /path/to/edu-course-proto-1.0.0
 ```
 
 或者直接复制到项目中：
@@ -97,7 +97,12 @@ cp -r edu-course-proto-1.0.0 /path/to/your-project/vendor/edu-course-proto
 
 #### 1. 配置 Go 模块路径
 
-修改 `gen/go/go.mod` 中的模块路径为私有仓库路径：
+修改 `proto/course.proto` 中的 `go_package` 选项为私有仓库路径：
+```protobuf
+option go_package = "github.com/yourcompany/edu-course-proto/pb";
+```
+
+修改 `go.mod` 中的模块路径：
 ```go
 module github.com/yourcompany/edu-course-proto
 ```
@@ -106,7 +111,6 @@ module github.com/yourcompany/edu-course-proto
 
 根据私有仓库的要求进行发布，通常是：
 ```bash
-cd gen/go
 go mod tidy
 # 根据私有仓库文档进行发布
 ```

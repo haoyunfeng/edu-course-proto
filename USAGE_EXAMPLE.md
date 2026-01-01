@@ -8,10 +8,10 @@
 
 ```bash
 # 引入模块（使用特定版本）
-go get github.com/haoyunfeng/edu-course-proto/gen/go@v1.0.0
+go get github.com/haoyunfeng/edu-course-proto@v1.0.0
 
 # 或者在 go.mod 中手动添加
-go mod edit -require github.com/haoyunfeng/edu-course-proto/gen/go@v1.0.0
+go mod edit -require github.com/haoyunfeng/edu-course-proto@v1.0.0
 go mod download
 ```
 
@@ -27,7 +27,7 @@ import (
     "google.golang.org/grpc"
     "google.golang.org/grpc/credentials/insecure"
     
-    pb "github.com/haoyunfeng/edu-course-proto/gen/go/proto"
+    pb "github.com/haoyunfeng/edu-course-proto/pb"
 )
 
 func main() {
@@ -74,10 +74,15 @@ module your-project
 go 1.21
 
 require (
-    github.com/haoyunfeng/edu-course-proto/gen/go v1.0.0
+    github.com/haoyunfeng/edu-course-proto v1.0.0
     google.golang.org/grpc v1.60.0
     google.golang.org/protobuf v1.31.0
 )
+```
+
+**注意**：如果模块还未发布到 GitHub，可以使用 replace 指令进行本地开发：
+```go
+replace github.com/haoyunfeng/edu-course-proto => ../edu-course-proto
 ```
 
 ## 方式二：使用本地打包文件
@@ -98,12 +103,12 @@ module your-project
 go 1.21
 
 require (
-    edu-course/proto v0.0.0-00010101000000-000000000000
+    github.com/haoyunfeng/edu-course-proto v0.0.0-00010101000000-000000000000
     google.golang.org/grpc v1.60.0
     google.golang.org/protobuf v1.31.0
 )
 
-replace edu-course/proto => ./vendor/edu-course-proto
+replace github.com/haoyunfeng/edu-course-proto => ./vendor/edu-course-proto
 ```
 
 ### 3. 在代码中使用
@@ -118,7 +123,7 @@ import (
     "google.golang.org/grpc"
     "google.golang.org/grpc/credentials/insecure"
     
-    pb "edu-course/proto/proto"
+    pb "github.com/haoyunfeng/edu-course-proto/pb"
 )
 
 func main() {
@@ -149,9 +154,10 @@ import (
     "context"
     "log"
     "net"
+    "time"
     
     "google.golang.org/grpc"
-    pb "edu-course/proto/proto"
+    pb "github.com/haoyunfeng/edu-course-proto/pb"
 )
 
 type server struct {
