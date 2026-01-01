@@ -95,14 +95,47 @@ export PATH="$PATH:$(go env GOPATH)/bin"
    make generate-protoc
    ```
 
-### 5. 模块路径更改后如何迁移
+### 5. replacement directory ./pb_stub does not exist
 
-如果之前使用了其他模块路径（如 `edu-course/proto`），需要：
+**问题原因**：
+在调用方的 `go.mod` 文件中有一个错误的 replace 指令，指向了不存在的目录。
 
-1. 更新 `proto/course.proto` 中的 `go_package`
-2. 清理并重新生成代码
-3. 更新调用方的导入路径
-4. 更新调用方的 `go.mod` 中的模块路径
+**解决方案**：
+
+1. 检查调用方项目的 `go.mod` 文件，查找 replace 指令：
+   ```bash
+   grep -A 2 "replace" go.mod
+   ```
+
+2. 如果发现有类似这样的错误 replace：
+   ```go
+   replace github.com/haoyunfeng/edu-course-proto/pb => ./pb_stub
+   ```
+   
+   这是错误的！正确的做法应该是：
+
+   **方案A：删除错误的 replace（推荐）**
+   如果模块已经发布到 GitHub，直接删除这个 replace 指令：
+   ```bash
+   go mod edit -dropreplace github.com/haoyunfeng/edu-course-proto/pb
+   ```
+
+   **方案B：使用正确的 replace**
+   如果要使用本地路径，应该是：
+   ```go
+   replace github.com/haoyunfeng/edu-course-proto => /path/to/edu-course-proto
+   ```
+   注意：替换的是模块路径 `github.com/haoyunfeng/edu-course-proto`，而不是包路径 `github.com/haoyunfeng/edu-course-proto/pb`
+
+3. 清理并重新下载依赖：
+   ```bash
+   go mod tidy
+   ```
+
+**重要提示**：
+- 模块路径：`github.com/haoyunfeng/edu-course-proto`（用于 replace 和 go get）
+- 包路径：`github.com/haoyunfeng/edu-course-proto/pb`（用于 import）
+- replace 指令应该替换模块路径，而不是包路径
 
 ## 验证步骤
 
