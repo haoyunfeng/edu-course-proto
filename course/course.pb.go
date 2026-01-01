@@ -4,7 +4,7 @@
 // 	protoc        v4.25.3
 // source: proto/course.proto
 
-package pb
+package course
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -845,7 +845,7 @@ const file_proto_course_proto_rawDesc = "" +
 	"\tGetCourse\x12\x18.course.GetCourseRequest\x1a\x19.course.GetCourseResponse\x12L\n" +
 	"\rGetAllCourses\x12\x1c.course.GetAllCoursesRequest\x1a\x1d.course.GetAllCoursesResponse\x12I\n" +
 	"\fUpdateCourse\x12\x1b.course.UpdateCourseRequest\x1a\x1c.course.UpdateCourseResponse\x12I\n" +
-	"\fDeleteCourse\x12\x1b.course.DeleteCourseRequest\x1a\x1c.course.DeleteCourseResponseB+Z)github.com/haoyunfeng/edu-course-proto/pbb\x06proto3"
+	"\fDeleteCourse\x12\x1b.course.DeleteCourseRequest\x1a\x1c.course.DeleteCourseResponseB/Z-github.com/haoyunfeng/edu-course-proto/courseb\x06proto3"
 
 var (
 	file_proto_course_proto_rawDescOnce sync.Once

@@ -27,7 +27,7 @@ import (
     "google.golang.org/grpc"
     "google.golang.org/grpc/credentials/insecure"
     
-    pb "github.com/haoyunfeng/edu-course-proto/pb"
+    course "github.com/haoyunfeng/edu-course-proto/course"
 )
 
 func main() {
@@ -39,13 +39,13 @@ func main() {
     defer conn.Close()
     
     // 创建客户端
-    client := pb.NewCourseServiceClient(conn)
+    client := course.NewCourseServiceClient(conn)
     
     // 调用服务
     ctx := context.Background()
     
     // 示例：创建课程
-    req := &pb.CreateCourseRequest{
+    req := &course.CreateCourseRequest{
         Title:       "Go 编程入门",
         Content:     "这是一门 Go 编程入门课程",
         Description: "学习 Go 语言的基础知识",
@@ -123,7 +123,7 @@ import (
     "google.golang.org/grpc"
     "google.golang.org/grpc/credentials/insecure"
     
-    pb "github.com/haoyunfeng/edu-course-proto/pb"
+    course "github.com/haoyunfeng/edu-course-proto/course"
 )
 
 func main() {
@@ -157,16 +157,16 @@ import (
     "time"
     
     "google.golang.org/grpc"
-    pb "github.com/haoyunfeng/edu-course-proto/pb"
+    course "github.com/haoyunfeng/edu-course-proto/course"
 )
 
 type server struct {
-    pb.UnimplementedCourseServiceServer
+    course.UnimplementedCourseServiceServer
 }
 
-func (s *server) CreateCourse(ctx context.Context, req *pb.CreateCourseRequest) (*pb.CreateCourseResponse, error) {
+func (s *server) CreateCourse(ctx context.Context, req *course.CreateCourseRequest) (*course.CreateCourseResponse, error) {
     // 实现创建课程的逻辑
-    course := &pb.Course{
+    crs := &course.Course{
         Id:          1,
         Title:       req.Title,
         Content:     req.Content,
@@ -181,12 +181,12 @@ func (s *server) CreateCourse(ctx context.Context, req *pb.CreateCourseRequest) 
         UpdatedAt:   time.Now().Unix(),
     }
     
-    return &pb.CreateCourseResponse{
-        Course: course,
+    return &course.CreateCourseResponse{
+        Course: crs,
     }, nil
 }
 
-func (s *server) GetCourse(ctx context.Context, req *pb.GetCourseRequest) (*pb.GetCourseResponse, error) {
+func (s *server) GetCourse(ctx context.Context, req *course.GetCourseRequest) (*course.GetCourseResponse, error) {
     // 实现获取课程的逻辑
     // ...
 }
@@ -198,7 +198,7 @@ func main() {
     }
     
     s := grpc.NewServer()
-    pb.RegisterCourseServiceServer(s, &server{})
+    course.RegisterCourseServiceServer(s, &server{})
     
     log.Println("Server listening on :50051")
     if err := s.Serve(lis); err != nil {

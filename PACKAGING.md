@@ -15,7 +15,7 @@
 make generate-protoc
 
 # 提交生成的代码（可选：如果希望将生成的代码也提交到仓库）
-git add pb/ go.mod go.sum
+git add course/ go.mod go.sum
 git commit -m "feat: generate proto code"
 ```
 
@@ -43,12 +43,12 @@ replace github.com/haoyunfeng/edu-course-proto => ../edu-course-proto
 在代码中使用：
 ```go
 import (
-    "github.com/haoyunfeng/edu-course-proto/pb"
+    "github.com/haoyunfeng/edu-course-proto/course"
     "google.golang.org/grpc"
 )
 
 // 使用生成的代码
-client := pb.NewCourseServiceClient(conn)
+client := course.NewCourseServiceClient(conn)
 ```
 
 ### 方式二：打包成 tar.gz
@@ -99,7 +99,7 @@ cp -r edu-course-proto-1.0.0 /path/to/your-project/vendor/edu-course-proto
 
 修改 `proto/course.proto` 中的 `go_package` 选项为私有仓库路径：
 ```protobuf
-option go_package = "github.com/yourcompany/edu-course-proto/pb";
+option go_package = "github.com/yourcompany/edu-course-proto/course";
 ```
 
 修改 `go.mod` 中的模块路径：

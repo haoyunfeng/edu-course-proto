@@ -13,19 +13,19 @@ generate-protoc:
 	protoc --go_out=. --go_opt=paths=source_relative \
 		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
 		proto/course.proto
-	@echo "Moving generated files to pb directory..."
-	@mkdir -p pb && \
-	mv proto/*.pb.go pb/ 2>/dev/null || true
+	@echo "Moving generated files to course directory..."
+	@mkdir -p course && \
+	mv proto/*.pb.go course/ 2>/dev/null || true
 	@echo "Updating package declarations..."
-	@sed -i '' 's/^package proto$$/package pb/' pb/*.go 2>/dev/null || \
-	 sed -i 's/^package proto$$/package pb/' pb/*.go 2>/dev/null || true
+	@sed -i '' 's/^package proto$$/package course/' course/*.go 2>/dev/null || \
+	 sed -i 's/^package proto$$/package course/' course/*.go 2>/dev/null || true
 	@echo "Downloading dependencies..."
 	@go mod tidy
 
 # Clean generated files
 clean:
 	@echo "Cleaning generated files..."
-	rm -rf pb/ gen/
+	rm -rf course/ pb/ gen/
 
 # Lint proto files
 lint:
@@ -45,15 +45,15 @@ breaking:
 # Package generated code for distribution
 package:
 	@echo "Packaging generated code..."
-	@if [ ! -d "pb" ]; then \
-		echo "Error: pb directory not found. Please run 'make generate-protoc' first."; \
+	@if [ ! -d "course" ]; then \
+		echo "Error: course directory not found. Please run 'make generate-protoc' first."; \
 		exit 1; \
 	fi
 	@VERSION=$${VERSION:-$(shell git describe --tags --always 2>/dev/null || echo "v0.0.0")}; \
 	PACKAGE_NAME="edu-course-proto-$${VERSION#v}"; \
 	PACKAGE_DIR="dist/$$PACKAGE_NAME"; \
 	mkdir -p $$PACKAGE_DIR; \
-	cp -r pb $$PACKAGE_DIR/; \
+	cp -r course $$PACKAGE_DIR/; \
 	cp go.mod go.sum $$PACKAGE_DIR/ 2>/dev/null || true; \
 	cp README.md $$PACKAGE_DIR/ 2>/dev/null || true; \
 	cd dist && tar -czf "$$PACKAGE_NAME.tar.gz" "$$PACKAGE_NAME" && \
